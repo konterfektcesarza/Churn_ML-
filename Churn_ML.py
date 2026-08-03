@@ -95,7 +95,7 @@ best_acc = 0
 best_model = None
 best_params = None
 
-print("Rozpoczęto analizę wrażliwości. Testowanie modeli...")
+print("--Testowanie modeli--")
 for lr in learning_rates:
     for h1, h2 in hidden_layers:
         m, val_loss, val_acc = train_and_eval(lr, h1, h2, epochs=250)
@@ -111,8 +111,8 @@ res_df = pd.DataFrame(results)
 pivot_res = res_df.pivot(index='LR', columns='Hidden1', values='Val_Acc')
 plt.figure(figsize=(8, 5))
 sns.heatmap(pivot_res, annot=True, cmap='viridis', fmt=".4f")
-plt.title('Dokładność na zbiorze walidacyjnym (LR vs Rozmiar pierwszej warstwy ukrytej)')
-plt.ylabel('Learning Rate (Współczynnik uczenia)')
+plt.title('Dokładność na zbiorze walidacyjnym')
+plt.ylabel('Learning Rate')
 plt.xlabel('Rozmiar Hidden Layer 1')
 plt.tight_layout()
 plt.show()
@@ -126,7 +126,7 @@ with torch.no_grad():
     
 y_test_np = y_test_tensor.numpy()
 
-print("\nRaport Klasyfikacji (Dla Najlepszego Modelu):")
+print("\nRaport (najlepszy model:")
 print(classification_report(y_test_np, y_pred))
 
 auc = roc_auc_score(y_test_np, y_pred_prob)
@@ -137,16 +137,16 @@ fig, axes = plt.subplots(1, 2, figsize=(14, 6))
 fpr, tpr, _ = roc_curve(y_test_np, y_pred_prob)
 axes[0].plot(fpr, tpr, color='darkorange', lw=2, label=f'Model (AUC = {auc:.3f})')
 axes[0].plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-axes[0].set_xlabel('False Positive Rate (Odsetek fałszywie pozytywnych)')
-axes[0].set_ylabel('True Positive Rate (Odsetek prawdziwie pozytywnych)')
+axes[0].set_xlabel('False Positive Rate')
+axes[0].set_ylabel('True Positive Rate')
 axes[0].set_title('Krzywa ROC')
 axes[0].legend(loc="lower right")
 
 cm = confusion_matrix(y_test_np, y_pred)
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=axes[1])
-axes[1].set_xlabel('Przewidywana Klasa (Predicted)')
-axes[1].set_ylabel('Prawdziwa Klasa (Actual)')
-axes[1].set_title('Macierz Pomyłek (Confusion Matrix)')
+axes[1].set_xlabel('Przewidywana Klasa')
+axes[1].set_ylabel('Prawdziwa Klasa')
+axes[1].set_title('Macierz Pomyłek')
 
 plt.tight_layout()
 plt.show()
